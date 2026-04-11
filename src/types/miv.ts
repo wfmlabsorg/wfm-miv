@@ -22,3 +22,32 @@ export interface MIVSummary {
   goalDelta: number;
   dayResults: DayResult[];
 }
+
+// Abandon Rate MIV types
+export interface IntervalData {
+  time: string;
+  calls: number;
+}
+
+export interface AbandonResult {
+  time: string;
+  calls: number;
+  mivPercent: number;
+  upperBound: number;
+  lowerBound: number;
+  isLowVolume: boolean;
+  operationalBuffer: number;
+}
+
+export interface AbandonSettings {
+  targetAR: number;
+  confidenceLevel: number;
+  minCalls: number;
+}
+
+export interface AbandonStatistics {
+  totalIntervals: number;
+  lowVolumeIntervals: number;
+  avgMIV: number;
+  maxMIV: number;
+}

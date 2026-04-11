@@ -1,79 +1,106 @@
-import { Info } from 'lucide-react';
+import { TrendingUp, Target, AlertTriangle } from 'lucide-react';
 
 export function IntroTab() {
   return (
     <div className="space-y-6">
-      <div className="bg-slate-800 rounded-xl p-6">
-        <div className="flex items-start gap-3 mb-4">
-          <Info className="w-6 h-6 text-blue-400 mt-0.5 flex-shrink-0" />
-          <h2 className="text-xl font-semibold text-blue-400">
-            What is Minimal Interval Variance?
-          </h2>
-        </div>
-        <div className="space-y-4 text-slate-300">
+      {/* What is MIV */}
+      <div className="bg-white rounded-xl shadow-md p-6">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          What is Minimal Interval Variance?
+        </h2>
+        <div className="space-y-3 text-gray-600">
           <p>
-            When we break contact center data down to the lowest level interval
-            (using 30 minutes for our analysis), we encounter a{' '}
-            <span className="font-semibold text-white">
-              Minimal Interval Variance
-            </span>{' '}
-            (MIV). This variance{' '}
-            <em className="text-orange-300">cannot</em> be forecasted
-            away, and should be leveraged to understand the minimum variance
-            inherent in any forecast.
+            When we analyze contact center data at the interval level (typically 30 minutes),
+            every metric exhibits a <strong className="text-gray-800">Minimal Interval Variance</strong> (MIV)
+            — a statistical floor of variability that <em>cannot</em> be eliminated through
+            better forecasting or management.
           </p>
           <p>
-            This application demonstrates how forecast accuracy goals should
-            consider:
-          </p>
-          <ol className="list-decimal list-inside space-y-2 pl-2">
-            <li>
-              The <span className="font-semibold text-white">size</span> of
-              your organization (calls offered per week)
-            </li>
-            <li>
-              How widely or narrowly calls are{' '}
-              <span className="font-semibold text-white">distributed</span>{' '}
-              across the week
-            </li>
-            <li>
-              The{' '}
-              <span className="font-semibold text-white">
-                hours of operation
-              </span>{' '}
-              across each day
-            </li>
-          </ol>
-          <p>
-            The underlying math uses the relationship between call volume and
-            statistical variance: for a given call rate, the coefficient of
-            variation at the interval level is{' '}
-            <code className="bg-slate-900 px-2 py-0.5 rounded text-blue-300 text-sm">
-              MIV = sqrt(2 / (calls_per_interval x PI))
-            </code>
-            . Smaller intervals with fewer calls will always have higher
-            percentage variance — this is a mathematical certainty, not a
-            forecasting failure.
+            Setting performance targets tighter than the MIV creates unachievable goals
+            and masks real performance issues with statistical noise.
           </p>
         </div>
       </div>
 
-      <div className="bg-slate-800/50 border-l-4 border-blue-500 rounded-r-xl p-5">
-        <h3 className="font-semibold text-white mb-3">Getting Started</h3>
-        <div className="space-y-2 text-slate-300 text-sm">
+      {/* Two Types */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+          <div className="flex items-center gap-2 mb-3">
+            <TrendingUp className="w-5 h-5 text-blue-600" />
+            <h3 className="text-lg font-semibold text-gray-800">Volume MIV</h3>
+          </div>
+          <span className="inline-block bg-blue-100 text-blue-700 text-xs font-medium px-2 py-0.5 rounded mb-3">
+            Deterministic
+          </span>
+          <p className="text-gray-600 text-sm mb-3">
+            Call arrivals follow a <strong>Poisson process</strong>. The variance is purely
+            mathematical — given a call rate, the minimum percentage variation at the interval
+            level is fixed:
+          </p>
+          <div className="bg-gray-50 border-l-4 border-blue-400 p-3 font-mono text-sm text-gray-700">
+            MIV = sqrt(2 / (calls_per_interval x PI))
+          </div>
+          <p className="text-gray-500 text-sm mt-3">
+            Use this to set <strong>forecast accuracy goals</strong> that account for
+            organization size and operating hours.
+          </p>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-amber-500">
+          <div className="flex items-center gap-2 mb-3">
+            <Target className="w-5 h-5 text-amber-600" />
+            <h3 className="text-lg font-semibold text-gray-800">Abandon Rate MIV</h3>
+          </div>
+          <span className="inline-block bg-amber-100 text-amber-700 text-xs font-medium px-2 py-0.5 rounded mb-3">
+            Behavioral
+          </span>
+          <p className="text-gray-600 text-sm mb-3">
+            Abandon rates involve <strong>human behavior</strong> on top of statistical
+            variance. The standard error of a proportion creates interval-specific
+            confidence bands:
+          </p>
+          <div className="bg-gray-50 border-l-4 border-amber-400 p-3 font-mono text-sm text-gray-700">
+            MIV = sqrt(p(1-p)/n) x confidence x (1 + buffer)
+          </div>
+          <p className="text-gray-500 text-sm mt-3">
+            Use this to set <strong>abandon rate targets</strong> that adjust dynamically
+            based on call volume per interval.
+          </p>
+        </div>
+      </div>
+
+      {/* Key Insight */}
+      <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl shadow-md p-6 text-white">
+        <div className="flex items-center gap-2 mb-3">
+          <AlertTriangle className="w-5 h-5" />
+          <h3 className="text-lg font-semibold">Why This Matters</h3>
+        </div>
+        <p className="text-blue-100">
+          Contact centers commonly set a single flat target (e.g., "5% forecast accuracy"
+          or "3% abandon rate") across all intervals. But low-volume intervals —
+          early morning, late evening, weekends — have inherently higher variance.
+          Holding them to the same standard as peak hours creates false failures
+          and wasted investigation.
+        </p>
+        <p className="text-blue-100 mt-3">
+          MIV provides the <strong className="text-white">mathematically-grounded floor</strong> —
+          the starting point for realistic, interval-aware targets.
+        </p>
+      </div>
+
+      {/* Getting Started */}
+      <div className="bg-white rounded-xl shadow-md p-6">
+        <h3 className="font-semibold text-gray-800 mb-3">Getting Started</h3>
+        <div className="space-y-2 text-gray-600 text-sm">
           <p>
-            <span className="font-semibold text-blue-400">Step 1:</span> Go to
-            the <span className="font-semibold text-white">Inputs</span> tab
-            and enter your weekly call volume.
+            <span className="font-semibold text-blue-600">Volume MIV tab:</span> Enter
+            your weekly call volume, day-of-week distribution, and hours of operation to
+            calculate the minimum forecast variance by day.
           </p>
           <p>
-            <span className="font-semibold text-blue-400">Step 2:</span> Adjust
-            the day-of-week distribution and hours of operation.
-          </p>
-          <p>
-            <span className="font-semibold text-blue-400">Step 3:</span> View
-            your results on the{' '}
-            <span className="font-semibold text-white">Analysis</span> tab.
+            <span className="font-semibold text-amber-600">Abandon Rate MIV tab:</span> Enter
+            interval-level call volumes (or load sample data) to see how abandon rate
+            targets should flex based on volume per interval.
           </p>
         </div>
       </div>
