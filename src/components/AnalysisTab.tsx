@@ -1,5 +1,6 @@
 import { CheckCircle, AlertTriangle, Phone, Calendar, Clock, BarChart3 } from 'lucide-react';
 import { MIVChart } from './MIVChart';
+import { ErrorBoundary } from './ErrorBoundary';
 import type { MIVSummary } from '../types/miv';
 
 interface Props {
@@ -88,10 +89,12 @@ export function AnalysisTab({ result, pctValid }: Props) {
         <h2 className="text-lg font-semibold text-blue-400 mb-4">
           MIV by Day of Week
         </h2>
-        <MIVChart
-          dayResults={result.dayResults}
-          forecastGoal={result.forecastGoal}
-        />
+        <ErrorBoundary>
+          <MIVChart
+            dayResults={result.dayResults}
+            forecastGoal={result.forecastGoal}
+          />
+        </ErrorBoundary>
       </div>
 
       {/* Detail Table */}
