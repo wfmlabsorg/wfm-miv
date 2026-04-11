@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { BarChart2, TrendingUp, Target, BookOpen } from 'lucide-react';
+import { BarChart2, TrendingUp, Target, BookOpen, Clock, Upload } from 'lucide-react';
 import {
   computeVolumeMIV,
   calculateAbandonMIV,
@@ -12,14 +12,18 @@ import {
 import type { DayConfig, AbandonSettings } from './types/miv';
 import { IntroTab } from './components/IntroTab';
 import { VolumeTab } from './components/VolumeTab';
+import { IntervalTab } from './components/IntervalTab';
 import { AbandonTab } from './components/AbandonTab';
+import { YourDataTab } from './components/YourDataTab';
 
-type Tab = 'intro' | 'volume' | 'abandon';
+type Tab = 'intro' | 'volume' | 'interval' | 'abandon' | 'yourdata';
 
-const tabs: { id: Tab; label: string; icon: React.ReactNode; desc: string }[] = [
-  { id: 'intro', label: 'Introduction', icon: <BookOpen className="w-4 h-4" />, desc: 'What is MIV?' },
-  { id: 'volume', label: 'Volume MIV', icon: <TrendingUp className="w-4 h-4" />, desc: 'Forecast Accuracy' },
-  { id: 'abandon', label: 'Abandon Rate MIV', icon: <Target className="w-4 h-4" />, desc: 'Service Targets' },
+const tabs: { id: Tab; label: string; shortLabel: string; icon: React.ReactNode }[] = [
+  { id: 'intro', label: 'Introduction', shortLabel: 'Intro', icon: <BookOpen className="w-4 h-4" /> },
+  { id: 'volume', label: 'Volume MIV', shortLabel: 'Volume', icon: <TrendingUp className="w-4 h-4" /> },
+  { id: 'interval', label: 'Interval View', shortLabel: 'Interval', icon: <Clock className="w-4 h-4" /> },
+  { id: 'abandon', label: 'Abandon Rate', shortLabel: 'Abandon', icon: <Target className="w-4 h-4" /> },
+  { id: 'yourdata', label: 'Your Data', shortLabel: 'Data', icon: <Upload className="w-4 h-4" /> },
 ];
 
 export default function App() {
@@ -88,21 +92,21 @@ export default function App() {
         </div>
 
         {/* Tabs */}
-        <div className="bg-white rounded-xl shadow-md mb-6">
-          <nav className="flex border-b border-gray-200">
+        <div className="bg-white rounded-xl shadow-md mb-6 overflow-x-auto">
+          <nav className="flex border-b border-gray-200 min-w-max">
             {tabs.map(t => (
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-medium transition-colors border-b-2 ${
+                className={`flex items-center justify-center gap-1.5 px-4 py-3 text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${
                   tab === t.id
                     ? 'text-blue-600 border-blue-600 bg-blue-50/50'
                     : 'text-gray-500 border-transparent hover:text-gray-700 hover:bg-gray-50'
                 }`}
               >
                 {t.icon}
-                <span className="hidden sm:inline">{t.label}</span>
-                <span className="sm:hidden">{t.label.split(' ')[0]}</span>
+                <span className="hidden md:inline">{t.label}</span>
+                <span className="md:hidden">{t.shortLabel}</span>
               </button>
             ))}
           </nav>
@@ -123,6 +127,13 @@ export default function App() {
             result={volumeResult}
           />
         )}
+        {tab === 'interval' && (
+          <IntervalTab
+            callsPerWeek={callsPerWeek}
+            days={days}
+            forecastGoal={forecastGoal}
+          />
+        )}
         {tab === 'abandon' && (
           <AbandonTab
             settings={abandonSettings}
@@ -133,6 +144,9 @@ export default function App() {
             onLoadSample={handleLoadSample}
             calcResult={abandonCalcResult}
           />
+        )}
+        {tab === 'yourdata' && (
+          <YourDataTab forecastGoal={forecastGoal} />
         )}
 
         {/* Footer */}

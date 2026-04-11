@@ -194,6 +194,23 @@ export function AbandonTab({
           </p>
         </div>
       )}
+
+      {/* Disclaimer */}
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+        <h4 className="font-semibold text-amber-800 text-sm mb-2">Important Disclaimer</h4>
+        <p className="text-amber-700 text-xs leading-relaxed">
+          Abandon rates are fundamentally <strong>behavioral</strong> — they reflect caller
+          patience, IVR design, queue messaging, callback offerings, and staffing decisions,
+          not just statistical variance. Unlike volume forecasting (which follows a deterministic
+          Poisson process), abandon behavior introduces additional variability that cannot be
+          fully captured by statistical models alone. This tool applies Minimal Interval Variance
+          concepts to abandon rates as a <strong>prototype demonstration</strong> of how
+          interval-aware targets could improve on flat thresholds. The MIV bands shown here
+          represent the <em>statistical component</em> of abandon rate variance — actual
+          abandon rates will be influenced by operational factors beyond what this model captures.
+          Use these results as a starting point for discussion, not as definitive targets.
+        </p>
+      </div>
     </div>
   );
 }
