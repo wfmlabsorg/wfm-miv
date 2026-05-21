@@ -55,7 +55,7 @@ interface IntervalResult {
   mivPct: number;
 }
 
-export function YourDataTab({ forecastGoal }: { forecastGoal: number }) {
+export function YourDataTab({ forecastGoal, isDark }: { forecastGoal: number; isDark: boolean }) {
   const [rawData, setRawData] = useState('');
   const [results, setResults] = useState<IntervalResult[]>([]);
 
@@ -97,21 +97,21 @@ export function YourDataTab({ forecastGoal }: { forecastGoal: number }) {
   return (
     <div className="space-y-6">
       {/* Input */}
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">
-          <Upload className="w-5 h-5 text-teal-600 inline mr-2" />
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6">
+        <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">
+          <Upload className="w-5 h-5 text-teal-600 dark:text-teal-400 inline mr-2" />
           Analyze Your Own Data
         </h2>
-        <p className="text-sm text-gray-500 mb-4">
+        <p className="text-sm text-gray-500 dark:text-gray-500 mb-4">
           Upload or paste your interval-level call volume data to see the MIV for each
-          interval. Format: one line per interval as <code className="bg-gray-100 px-1 rounded text-sm">Time, Calls</code> (e.g., "08:00, 124").
+          interval. Format: one line per interval as <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded text-sm">Time, Calls</code> (e.g., "08:00, 124").
         </p>
 
         {/* Sample buttons */}
         <div className="flex flex-wrap gap-3 mb-4">
           <button
             onClick={() => handleLoadSample(SAMPLE_VOLUME)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-all focus:ring-2 focus:ring-blue-500 flex items-center gap-2"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-all focus:ring-2 focus:ring-orange-500 flex items-center gap-2"
           >
             <FileText className="w-4 h-4" />
             Sample: Large Center (6k/day)
@@ -139,12 +139,12 @@ export function YourDataTab({ forecastGoal }: { forecastGoal: number }) {
           value={rawData}
           onChange={e => setRawData(e.target.value)}
           placeholder="08:00, 124&#10;08:30, 156&#10;09:00, 189&#10;..."
-          className="w-full h-40 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition font-mono text-sm"
+          className="w-full h-40 p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition font-mono text-sm"
         />
         <button
           onClick={() => calculate(rawData)}
           disabled={!rawData.trim()}
-          className="mt-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-6 py-2 rounded-md text-sm font-medium transition-all focus:ring-2 focus:ring-green-500"
+          className="mt-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 dark:disabled:bg-gray-600 text-white px-6 py-2 rounded-md text-sm font-medium transition-all focus:ring-2 focus:ring-green-500"
         >
           Calculate MIV
         </button>
@@ -154,39 +154,39 @@ export function YourDataTab({ forecastGoal }: { forecastGoal: number }) {
         <>
           {/* Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white p-4 rounded-lg shadow-md border-l-4 border-blue-500 transition-all hover:shadow-lg">
-              <div className="text-2xl font-bold text-gray-800">{totalCalls.toLocaleString()}</div>
-              <div className="text-sm text-gray-500 mt-1">Total Calls</div>
+            <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-md border-l-4 border-orange-500 transition-all hover:shadow-lg">
+              <div className="text-2xl font-bold text-gray-800 dark:text-gray-100">{totalCalls.toLocaleString()}</div>
+              <div className="text-sm text-gray-500 dark:text-gray-500 mt-1">Total Calls</div>
             </div>
-            <div className="bg-white p-4 rounded-lg shadow-md border-l-4 border-green-500 transition-all hover:shadow-lg">
-              <div className="text-2xl font-bold text-gray-800">{(avgMIV * 100).toFixed(2)}%</div>
-              <div className="text-sm text-gray-500 mt-1">Avg MIV</div>
+            <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-md border-l-4 border-green-500 transition-all hover:shadow-lg">
+              <div className="text-2xl font-bold text-gray-800 dark:text-gray-100">{(avgMIV * 100).toFixed(2)}%</div>
+              <div className="text-sm text-gray-500 dark:text-gray-500 mt-1">Avg MIV</div>
             </div>
-            <div className="bg-white p-4 rounded-lg shadow-md border-l-4 border-red-500 transition-all hover:shadow-lg">
-              <div className="text-2xl font-bold text-gray-800">{(maxMIV * 100).toFixed(2)}%</div>
-              <div className="text-sm text-gray-500 mt-1">Max MIV</div>
+            <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-md border-l-4 border-red-500 transition-all hover:shadow-lg">
+              <div className="text-2xl font-bold text-gray-800 dark:text-gray-100">{(maxMIV * 100).toFixed(2)}%</div>
+              <div className="text-sm text-gray-500 dark:text-gray-500 mt-1">Max MIV</div>
             </div>
-            <div className="bg-white p-4 rounded-lg shadow-md border-l-4 border-amber-500 transition-all hover:shadow-lg">
-              <div className="text-2xl font-bold text-gray-800">{(minMIV * 100).toFixed(2)}%</div>
-              <div className="text-sm text-gray-500 mt-1">Min MIV</div>
+            <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-md border-l-4 border-amber-500 transition-all hover:shadow-lg">
+              <div className="text-2xl font-bold text-gray-800 dark:text-gray-100">{(minMIV * 100).toFixed(2)}%</div>
+              <div className="text-sm text-gray-500 dark:text-gray-500 mt-1">Min MIV</div>
             </div>
           </div>
 
           {/* Chart */}
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <h3 className="font-semibold text-gray-800 mb-4">Your Data — MIV by Interval</h3>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6">
+            <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-4">Your Data — MIV by Interval</h3>
             <ErrorBoundary>
-              <IntervalChart intervals={results} forecastGoal={forecastGoal} />
+              <IntervalChart intervals={results} forecastGoal={forecastGoal} isDark={isDark} />
             </ErrorBoundary>
           </div>
 
           {/* Table */}
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <h3 className="font-semibold text-gray-800 mb-4">Interval Detail</h3>
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6">
+            <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-4">Interval Detail</h3>
             <div className="overflow-x-auto max-h-96 overflow-y-auto">
               <table className="w-full">
-                <thead className="sticky top-0 bg-white">
-                  <tr className="text-left text-xs text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                <thead className="sticky top-0 bg-white dark:bg-gray-900">
+                  <tr className="text-left text-xs text-gray-500 dark:text-gray-500 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">
                     <th className="pb-2 pr-4">Time</th>
                     <th className="pb-2 pr-4">Calls</th>
                     <th className="pb-2 pr-4">% of Total</th>
@@ -195,13 +195,13 @@ export function YourDataTab({ forecastGoal }: { forecastGoal: number }) {
                 </thead>
                 <tbody>
                   {results.map(r => (
-                    <tr key={r.time} className="border-b border-gray-100">
-                      <td className="py-1.5 pr-4 text-sm font-medium text-gray-700">{r.time}</td>
-                      <td className="py-1.5 pr-4 text-sm text-gray-600">{r.calls.toLocaleString()}</td>
-                      <td className="py-1.5 pr-4 text-sm text-gray-600">
+                    <tr key={r.time} className="border-b border-gray-100 dark:border-gray-800">
+                      <td className="py-1.5 pr-4 text-sm font-medium text-gray-700 dark:text-gray-300">{r.time}</td>
+                      <td className="py-1.5 pr-4 text-sm text-gray-600 dark:text-gray-400">{r.calls.toLocaleString()}</td>
+                      <td className="py-1.5 pr-4 text-sm text-gray-600 dark:text-gray-400">
                         {totalCalls > 0 ? ((r.calls / totalCalls) * 100).toFixed(1) : '0'}%
                       </td>
-                      <td className={`py-1.5 text-sm font-semibold ${r.mivPct > forecastGoal ? 'text-red-600' : 'text-green-600'}`}>
+                      <td className={`py-1.5 text-sm font-semibold ${r.mivPct > forecastGoal ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
                         {(r.mivPct * 100).toFixed(2)}%
                       </td>
                     </tr>
@@ -214,9 +214,9 @@ export function YourDataTab({ forecastGoal }: { forecastGoal: number }) {
       )}
 
       {results.length === 0 && (
-        <div className="bg-white rounded-xl shadow-md p-8 text-center">
-          <h3 className="text-lg font-semibold text-gray-700 mb-3">Upload or Paste Your Data</h3>
-          <p className="text-gray-500 text-sm">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-8 text-center">
+          <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Upload or Paste Your Data</h3>
+          <p className="text-gray-500 dark:text-gray-500 text-sm">
             Load a sample dataset above to see it in action, or paste your own interval-level
             call volumes. CSV files should have two columns: Time and Calls.
           </p>

@@ -23,11 +23,14 @@ ChartJS.register(
 interface Props {
   dayResults: DayResult[];
   forecastGoal: number;
+  isDark: boolean;
 }
 
-export function VolumeChart({ dayResults, forecastGoal }: Props) {
+export function VolumeChart({ dayResults, forecastGoal, isDark }: Props) {
   const activeDays = dayResults.filter(r => r.dailyCalls > 0);
   const goalPct = forecastGoal * 100;
+  const textColor = isDark ? '#d1d5db' : '#374151';
+  const gridColor = isDark ? 'rgba(75, 85, 99, 0.5)' : 'rgba(0, 0, 0, 0.1)';
 
   const chartData = useMemo(() => {
     const labels = activeDays.map(r => r.day.slice(0, 3));
@@ -70,7 +73,10 @@ export function VolumeChart({ dayResults, forecastGoal }: Props) {
     maintainAspectRatio: false,
     animation: { duration: 750 },
     plugins: {
-      legend: { display: true },
+      legend: {
+        display: true,
+        labels: { color: textColor },
+      },
       tooltip: {
         callbacks: {
           afterLabel: () => `Goal: ${goalPct.toFixed(1)}%`,
@@ -78,17 +84,23 @@ export function VolumeChart({ dayResults, forecastGoal }: Props) {
       },
     },
     scales: {
-      x: { title: { display: true, text: 'Day of Week' } },
+      x: {
+        title: { display: true, text: 'Day of Week', color: textColor },
+        ticks: { color: textColor },
+        grid: { color: gridColor },
+      },
       y: {
         beginAtZero: true,
-        title: { display: true, text: 'MIV %' },
+        title: { display: true, text: 'MIV %', color: textColor },
+        ticks: { color: textColor },
+        grid: { color: gridColor },
       },
     },
-  }), [goalPct]);
+  }), [goalPct, textColor, gridColor]);
 
   if (activeDays.length === 0) {
     return (
-      <div className="h-80 flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200">
+      <div className="h-80 flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
         <p className="text-gray-500">No data to display</p>
       </div>
     );

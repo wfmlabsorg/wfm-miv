@@ -24,10 +24,13 @@ ChartJS.register(
 interface Props {
   results: AbandonResult[];
   targetAR: number;
+  isDark?: boolean;
 }
 
-export function AbandonChart({ results, targetAR }: Props) {
+export function AbandonChart({ results, targetAR, isDark = false }: Props) {
   const chartRef = useRef<ChartJS>(null);
+  const textColor = isDark ? '#d1d5db' : '#374151';
+  const gridColor = isDark ? 'rgba(75, 85, 99, 0.5)' : 'rgba(0, 0, 0, 0.1)';
 
   useEffect(() => {
     if (chartRef.current) chartRef.current.update();
@@ -56,7 +59,7 @@ export function AbandonChart({ results, targetAR }: Props) {
         borderDash: [3, 3],
         pointRadius: 0,
         fill: '+1',
-        backgroundColor: 'rgba(243, 156, 18, 0.1)',
+        backgroundColor: isDark ? 'rgba(243, 156, 18, 0.15)' : 'rgba(243, 156, 18, 0.1)',
         yAxisID: 'y',
       },
       {
@@ -73,17 +76,21 @@ export function AbandonChart({ results, targetAR }: Props) {
         label: 'Call Volume',
         data: results.map(r => r.calls),
         backgroundColor: results.map(r =>
-          r.isLowVolume ? 'rgba(239, 68, 68, 0.2)' : 'rgba(149, 165, 166, 0.3)'
+          r.isLowVolume
+            ? (isDark ? 'rgba(248, 113, 113, 0.25)' : 'rgba(239, 68, 68, 0.2)')
+            : (isDark ? 'rgba(156, 163, 175, 0.3)' : 'rgba(149, 165, 166, 0.3)')
         ),
         borderColor: results.map(r =>
-          r.isLowVolume ? 'rgba(239, 68, 68, 0.6)' : 'rgba(149, 165, 166, 0.8)'
+          r.isLowVolume
+            ? (isDark ? 'rgba(248, 113, 113, 0.7)' : 'rgba(239, 68, 68, 0.6)')
+            : (isDark ? 'rgba(156, 163, 175, 0.8)' : 'rgba(149, 165, 166, 0.8)')
         ),
         borderWidth: 1,
         yAxisID: 'y1',
         order: 1,
       },
     ],
-  }), [results, targetAR, times]);
+  }), [results, targetAR, times, isDark]);
 
   const options = useMemo(() => ({
     responsive: true,
@@ -95,8 +102,12 @@ export function AbandonChart({ results, targetAR }: Props) {
         display: true,
         text: 'Interval-Specific Abandon Rate MIV Bands',
         font: { size: 16 },
+        color: textColor,
       },
-      legend: { display: true },
+      legend: {
+        display: true,
+        labels: { color: textColor },
+      },
       tooltip: {
         callbacks: {
           afterBody: (context: { dataIndex: number }[]) => {
@@ -115,27 +126,33 @@ export function AbandonChart({ results, targetAR }: Props) {
       },
     },
     scales: {
-      x: { title: { display: true, text: 'Time of Day' } },
+      x: {
+        title: { display: true, text: 'Time of Day', color: textColor },
+        ticks: { color: textColor },
+        grid: { color: gridColor },
+      },
       y: {
         type: 'linear' as const,
         display: true,
         position: 'left' as const,
         title: { display: true, text: 'Abandon Rate (%)', color: '#e74c3c' },
-        grid: { drawOnChartArea: true },
+        ticks: { color: textColor },
+        grid: { color: gridColor },
       },
       y1: {
         type: 'linear' as const,
         display: true,
         position: 'right' as const,
-        title: { display: true, text: 'Call Volume', color: '#95a5a6' },
+        title: { display: true, text: 'Call Volume', color: isDark ? '#9ca3af' : '#95a5a6' },
+        ticks: { color: textColor },
         grid: { drawOnChartArea: false },
       },
     },
-  }), [results]);
+  }), [results, textColor, gridColor, isDark]);
 
   if (results.length === 0) {
     return (
-      <div className="h-96 flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200">
+      <div className="h-96 flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
         <p className="text-gray-500">No data to display</p>
       </div>
     );
